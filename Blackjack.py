@@ -5,11 +5,14 @@ Created on Mon Apr  4 01:16:12 2016
 @author: Stew
 """
 
+# imports the modules to use (one is the cards and one has a game type scenario) 
 import Cards, game
 
+# THis class will be the blueprint of the actual blackjack game.  Sets values
 class BJ_Card(Cards.Card):
     ACE_VALUE = 1
     
+# this sets the value of the cards on the table (face up and face down) v has to add 1 because of the index of python.
     @property
     def value(self):
         if self.is_face_up:
@@ -19,24 +22,28 @@ class BJ_Card(Cards.Card):
             else:
                 v = None
             return v
-            
+
+#Adds the cards to the deck            
 class BJ_Deck(Cards.Deck):
     def populate(self):
         for suit in BJ_Card.SUITS:
             for rank in BJ_Card.RANKS:
                 self.cards.append(BJ_Card(rank, suit))
-                
+
+#This is the hand of each person -- the super command here overrides the Cards.Hand object -- I think                
 class BJ_Hand(Cards.Hand):
     def __init__(self, name):
         super(BJ_Hand, self).__init__()
         self.name = name
-        
+
+# I think this is a list of the names and total playing        
     def __str__(self):
         rep = self.name + ":\t" + super(BJ_Hand, self).__str__()
         if self.total:
             rep += "(" + str(self.total) + ")"
         return rep
-        
+
+#This counts the cards?        
     @property
     def total(self):
         # if a card in the hand has value of None, then total is None
@@ -44,7 +51,7 @@ class BJ_Hand(Cards.Hand):
             if not card.value:
                 return None
                     
-        # Add up card values, treat each Ace as 1
+        # Add up card values, treat each Ace as 1 -- t is total in hand (value)
         t = 0
         for card in self.cards:
             t += card.value
